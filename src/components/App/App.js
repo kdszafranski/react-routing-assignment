@@ -39,8 +39,8 @@ class App extends Component {
     });
   }
 
-  handleGetMoreInfo() {
-    console.log('clicked!')
+  handleGetMoreInfo(student) {
+    console.log('clicked!', student)
   }
 
   componentDidMount() {
