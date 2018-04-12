@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './App.css';
 import StudentForm from '../StudentForm/StudentForm';
-
+import StudentList from '../StudentList/StudentList.js'
 class App extends Component {
   constructor() {
     super();
@@ -18,10 +18,38 @@ class App extends Component {
   // This function is called by the StudentForm when the submit button is pressed
   addStudent(newStudent) {
     console.log(newStudent);
-    // POST your data here
+    // POST your data here to /students
+    axios.post('/students', newStudent)
+    .then((response) => {
+      console.log('response', response);
+      this.getStudents();
+    }).catch( (error) => {
+      console.log(error);
+    });
+  }
+  getStudents() {
+    axios.get('/students').then((response) => {
+      console.log('GET response', response)
+      // SAVE THE STUDENTS
+      this.setState({
+        studentList: response.data
+      });
+    }).catch(error => {
+      console.log(error)
+    });
+  }
+
+  handleGetMoreInfo() {
+    console.log('clicked!')
+  }
+
+  componentDidMount() {
+    // Load our existing info
+    this.getStudents();
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className="App">
         <header className="App-header">
@@ -31,7 +59,10 @@ class App extends Component {
         <StudentForm addStudent={this.addStudent}/>
 
         <p>Student list goes here.</p>
-      </div>
+        <StudentList 
+          studentList={this.state.studentList}
+          handleGetMoreInfo={this.handleGetMoreInfo}/>
+        </div>
     );
   }
 }
